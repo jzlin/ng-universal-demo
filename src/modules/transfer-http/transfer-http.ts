@@ -2,15 +2,18 @@ import { Injectable } from '@angular/core';
 import { ConnectionBackend, Http, Request, RequestOptions, RequestOptionsArgs, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { TransferState } from '../transfer-state/transfer-state';
-
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/fromPromise';
 
+import { TransferState } from '../transfer-state/transfer-state';
+
 @Injectable()
 export class TransferHttp {
-  constructor(private http: Http, protected transferState: TransferState) {}
+  constructor(
+    private http: Http,
+    protected transferState: TransferState
+  ) {}
 
   request(uri: string | Request, options?: RequestOptionsArgs): Observable<any> {
     return this.getData(uri, options, (url: string, options: RequestOptionsArgs) => {
@@ -29,16 +32,16 @@ export class TransferHttp {
    * Performs a request with `post` http method.
    */
   post(url: string, body: any, options?: RequestOptionsArgs): Observable<any> {
-    return this.getPostData(url, body, options, (url: string, options: RequestOptionsArgs) => {
-      return this.http.post(url, body. options);
+    return this.getPostData(url, body, options, (url: string, body: any, options: RequestOptionsArgs) => {
+      return this.http.post(url, body, options);
     });
   }
   /**
    * Performs a request with `put` http method.
    */
   put(url: string, body: any, options?: RequestOptionsArgs): Observable<any> {
-    return this.getData(url, options, (url: string, options: RequestOptionsArgs) => {
-      return this.http.put(url, options);
+    return this.getPostData(url, body, options, (url: string, body: any, options: RequestOptionsArgs) => {
+      return this.http.put(url, body, options);
     });
   }
   /**
@@ -53,8 +56,8 @@ export class TransferHttp {
    * Performs a request with `patch` http method.
    */
   patch(url: string, body: any, options?: RequestOptionsArgs): Observable<any> {
-    return this.getPostData(url, body, options, (url: string, options: RequestOptionsArgs) => {
-      return this.http.patch(url, body.options);
+    return this.getPostData(url, body, options, (url: string, body: any, options: RequestOptionsArgs) => {
+      return this.http.patch(url, body, options);
     });
   }
   /**
